@@ -4,14 +4,14 @@ const http = require("http");
 const server = http.createServer(app);
 const socketIO = require("socket.io");
 const cors = require('cors')
+app.use(cors());
 const io = socketIO(server, {
   cors: {
-    origin: "https://game-client-1m52.onrender.com",
+    origin: "https://multiplayer-game-frontend.onrender.com",
     methods: ["GET", "POST"],
   },
 });
 
-app.use(cors());
 
 var roomData = [{
   roomID: "",
