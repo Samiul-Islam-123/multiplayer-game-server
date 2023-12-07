@@ -7,7 +7,7 @@ const cors = require('cors')
 app.use(cors());
 const io = socketIO(server, {
   cors: {
-    origin: "https://multiplayer-game-frontend.onrender.com",
+    origin: "https://multiplayer-game-client.vercel.app",
     methods: ["GET", "POST"],
   },
 });
