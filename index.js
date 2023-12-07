@@ -4,9 +4,11 @@ const http = require("http");
 const server = http.createServer(app);
 const socketIO = require("socket.io");
 const cors = require('cors')
+const dotenv = require('dotenv')
+dotenv.config();
 const io = socketIO(server, {
   cors: {
-    origin: "https://game-client-1m52.onrender.com",
+    origin: process.env.CLIENTURL,
     methods: ["GET", "POST"],
   },
 });
@@ -37,6 +39,7 @@ io.on("connection", (socket) => {
   socket.on('request-id', (username) => {
     socket.emit('id-response', socket.id);
   })
+
 
 
 
@@ -106,6 +109,13 @@ io.on("connection", (socket) => {
   socket.on('request-roomData', roomID => {
     const currentRoomData = roomData.find(data => data.roomID === roomID);
     io.to(roomID).emit('response-roomData', currentRoomData);
+  })
+
+  //gameplay logic
+
+  socket.on('button-coordinates', data => {
+
+    io.to(data.roomID).emit('button-coordinates-response', data);
   })
 
   socket.on("disconnect", () => {
