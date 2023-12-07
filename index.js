@@ -4,16 +4,13 @@ const http = require("http");
 const server = http.createServer(app);
 const socketIO = require("socket.io");
 const cors = require('cors')
-const dotenv = require('dotenv')
-dotenv.config();
 const io = socketIO(server, {
   cors: {
-    origin: process.env.CLIENTURL,
+    origin: "https://game-client-1m52.onrender.com",
     methods: ["GET", "POST"],
   },
 });
 
-app.use(cors());
 
 var roomData = [{
   roomID: "",
