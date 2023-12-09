@@ -15,14 +15,23 @@ const io = socketIO(server, {
 
 app.use(cors());
 
+
 var roomData = [{
+  turn: 1,
   roomID: "",
   userX_name: "",
   userX_id: "",
   userO_name: "",
   userO_id: "",
-  full: "false"
+  full: "false",
+  gameboard: [
+    [" ", " ", " "],
+    [" ", " ", " "],
+    [" ", " ", " "]
+  ]
 }]
+
+
 
 app.get('/', (req, res) => {
   res.json({
@@ -107,6 +116,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on('request-roomData', roomID => {
+    //console.log(roomData)
     const currentRoomData = roomData.find(data => data.roomID === roomID);
     io.to(roomID).emit('response-roomData', currentRoomData);
   })
@@ -114,9 +124,25 @@ io.on("connection", (socket) => {
   //gameplay logic
 
   socket.on('button-coordinates', data => {
-
     io.to(data.roomID).emit('button-coordinates-response', data);
+
+    const currentRoomData = roomData.find(data => data.roomID === data.roomID);
+    if (currentRoomData.turn % 2 === 0) {
+      io.to(data.roomID).emit('turn-X', socket.id);
+    }
+
+    else {
+      io.to(data.roomID).emit('turn-O', socket.id);
+    }
+    currentRoomData.turn++;
+
   })
+
+  socket.on('start-game', (roomID) => {
+
+  })
+
+
 
   socket.on("disconnect", () => {
     console.log(`User with ID ${socket.id} disconnected`);
